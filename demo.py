@@ -60,7 +60,6 @@ except Exception as e:
 
 #%%
 import pandas as pd
-import xlwings as xw
 import shutil
 from openpyxl import load_workbook
 from openpyxl.utils.dataframe import dataframe_to_rows
@@ -89,7 +88,6 @@ wb.save('files/New_Sales_Records.xlsx')
 
 #%%
 import pandas as pd
-import xlwings as xw
 import shutil
 from openpyxl import load_workbook
 from openpyxl.utils.dataframe import dataframe_to_rows
