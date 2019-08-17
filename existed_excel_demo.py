@@ -68,7 +68,7 @@ refresh_pv(wb['PVT'])
 #save updates
 wb.save('files/New_Sales_Records_Formula.xlsx')
 
-#%%
+#%% Demo: Update cross worksheet formula cells
 import pandas as pd
 import shutil
 import math
@@ -88,7 +88,7 @@ merged_df = pd.concat([sales_df, new_sales_df], sort=False)
 #create a copy
 shutil.copy2('files/100_Sales_Records_Formula_Cross.xlsx', 'files/New_Sales_Records_Formula_Cross.xlsx')
 
-#update worksheet without formula
+#update worksheet without formula using openpyxl output API
 wb = load_workbook(filename = 'files/New_Sales_Records_Formula_Cross.xlsx')
 sales_ws = wb['100_Sales_Records']
 rows = dataframe_to_rows(merged_df, index=False)
@@ -114,3 +114,45 @@ refresh_pv(wb['PVT'])
 wb.save('files/New_Sales_Records_Formula_Cross.xlsx')
 
 
+#%% Demo: Don't use pandas API to update existed excel worksheet
+import pandas as pd
+import shutil
+import math
+from openpyxl import load_workbook
+from openpyxl.utils.dataframe import dataframe_to_rows
+from openpyxl.utils.cell import get_column_letter
+from openpyxl.formula.translate import Translator
+from itertools import islice
+from excel_helper import convert_ws_df, refresh_pv
+
+#merge new data
+wb = load_workbook(filename = 'files/100_Sales_Records_Formula_Cross.xlsx')
+sales_df = convert_ws_df(wb['100_Sales_Records'], True)
+new_sales_df = pd.read_csv('files/1000_Sales_Records.csv', encoding='ISO-8859-1')
+merged_df = pd.concat([sales_df, new_sales_df], sort=False)
+
+#create a copy
+shutil.copy2('files/100_Sales_Records_Formula_Cross.xlsx', 'files/NG_Sales_Records_Formula_Cross.xlsx')
+
+#update worksheet without formula using pandas output API
+merged_df.to_excel('files/NG_Sales_Records_Formula_Cross.xlsx', sheet_name='100_Sales_Records', index=False)
+
+#update another worksheet with formula
+summary_ws = wb['summary']
+c_idx = 1
+start_idx = summary_ws.max_row+1
+for r_idx in range(start_idx, start_idx+new_sales_df.shape[0]+1):
+    origin_cell_idx = str(get_column_letter(c_idx)) + str(r_idx-1)
+    target_cell_idx = str(get_column_letter(c_idx)) + str(r_idx)
+    value = Translator(summary_ws.cell(row=r_idx-1,column=c_idx).value,
+                                       origin=origin_cell_idx).translate_formula((target_cell_idx))
+    summary_ws.cell(row=r_idx, column=c_idx, value=value)
+
+#refresh pivot table
+refresh_pv(wb['PVT'])
+
+#save updates
+wb.save('files/NG_Sales_Records_Formula_Cross.xlsx')
+
+
+#%%
