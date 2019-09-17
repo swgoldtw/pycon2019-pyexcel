@@ -1,10 +1,10 @@
 import pandas as pd
 from itertools import islice
 
-def convert_ws_df(ws, keep_formula):
+def convert_ws_df(ws, have_header):
     df = None
     data = ws.values
-    if keep_formula:
+    if have_header:
         cols = next(data)
         data = list(data)
         data = (islice(r, 0, None) for r in data)
