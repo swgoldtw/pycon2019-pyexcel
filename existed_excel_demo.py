@@ -7,7 +7,7 @@ from excel_helper import convert_ws_df, refresh_pv
 
 #merge new data
 sales_df = pd.read_excel('files/100_Sales_Records.xlsx', 
-                         sheet_name='100_Sales_Records', 
+                         sheet_name='sales_records', 
                          encoding='ISO-8859-1')
 new_sales_df = pd.read_csv('files/1000_Sales_Records.csv', encoding='ISO-8859-1')
 merged_df = pd.concat([sales_df, new_sales_df])
@@ -17,7 +17,7 @@ shutil.copy2('files/100_Sales_Records.xlsx', 'files/New_Sales_Records.xlsx')
 
 #update worksheet
 wb = load_workbook(filename = 'files/New_Sales_Records.xlsx')
-sales_ws = wb['100_Sales_Records']
+sales_ws = wb['sales_records']
 rows = dataframe_to_rows(merged_df, index=False)
 for r_idx, row in enumerate(rows, 1):
     for c_idx, value in enumerate(row, 1):
@@ -42,7 +42,7 @@ from excel_helper import convert_ws_df, refresh_pv
 
 #merge new data
 wb = load_workbook(filename = 'files/100_Sales_Records_Formula.xlsx')
-sales_df = convert_ws_df(wb['100_Sales_Records'], True)
+sales_df = convert_ws_df(wb['sales_records'], True)
 new_sales_df = pd.read_csv('files/1000_Sales_Records.csv', encoding='ISO-8859-1')
 merged_df = pd.concat([sales_df, new_sales_df], sort=False)
 
@@ -51,7 +51,7 @@ shutil.copy2('files/100_Sales_Records_Formula.xlsx', 'files/New_Sales_Records_Fo
 
 #update worksheet with formula
 wb = load_workbook(filename = 'files/New_Sales_Records_Formula.xlsx')
-sales_ws = wb['100_Sales_Records']
+sales_ws = wb['sales_records']
 rows = dataframe_to_rows(merged_df, index=False)
 for r_idx, row in enumerate(rows, 1):
     for c_idx, value in enumerate(row, 1):
@@ -81,7 +81,7 @@ from excel_helper import convert_ws_df, refresh_pv
 
 #merge new data
 wb = load_workbook(filename = 'files/100_Sales_Records_Formula_Cross.xlsx')
-sales_df = convert_ws_df(wb['100_Sales_Records'], True)
+sales_df = convert_ws_df(wb['sales_records'], True)
 new_sales_df = pd.read_csv('files/1000_Sales_Records.csv', encoding='ISO-8859-1')
 merged_df = pd.concat([sales_df, new_sales_df], sort=False)
 
@@ -90,7 +90,7 @@ shutil.copy2('files/100_Sales_Records_Formula_Cross.xlsx', 'files/New_Sales_Reco
 
 #update worksheet without formula using openpyxl output API
 wb = load_workbook(filename = 'files/New_Sales_Records_Formula_Cross.xlsx')
-sales_ws = wb['100_Sales_Records']
+sales_ws = wb['sales_records']
 rows = dataframe_to_rows(merged_df, index=False)
 for r_idx, row in enumerate(rows, 1):
     for c_idx, value in enumerate(row, 1):
@@ -127,7 +127,7 @@ from excel_helper import convert_ws_df, refresh_pv
 
 #merge new data
 wb = load_workbook(filename = 'files/100_Sales_Records_Formula_Cross.xlsx')
-sales_df = convert_ws_df(wb['100_Sales_Records'], True)
+sales_df = convert_ws_df(wb['sales_records'], True)
 new_sales_df = pd.read_csv('files/1000_Sales_Records.csv', encoding='ISO-8859-1')
 merged_df = pd.concat([sales_df, new_sales_df], sort=False)
 
@@ -153,6 +153,3 @@ refresh_pv(wb['PVT'])
 
 #save updates
 wb.save('files/NG_Sales_Records_Formula_Cross.xlsx')
-
-
-#%%
