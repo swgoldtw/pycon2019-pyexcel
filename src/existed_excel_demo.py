@@ -1,4 +1,5 @@
-#%% Demo: Update cross worksheet formula cells
+# %% Demo: runnable in jupyter
+
 import pandas as pd
 import shutil
 import math
@@ -7,7 +8,23 @@ from openpyxl.utils.dataframe import dataframe_to_rows
 from openpyxl.utils.cell import get_column_letter
 from openpyxl.formula.translate import Translator
 from itertools import islice
-from excel_helper import convert_ws_df, refresh_pv
+
+def convert_ws_df(ws, have_header):
+    df = None
+    data = ws.values
+    if have_header:
+        cols = next(data)
+        data = list(data)
+        data = (islice(r, 0, None) for r in data)
+        df = pd.DataFrame(data, columns=cols)
+    else:
+        df = pd.DataFrame(data)
+
+    return df
+
+def refresh_pv(ws):
+    pivot = ws._pivots[0]
+    pivot.cache.refreshOnload = True
 
 print('----load excel file----')
 wb = load_workbook(filename = 'files/excel_from_boss.xlsx')
